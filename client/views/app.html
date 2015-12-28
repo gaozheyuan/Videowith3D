@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <script src="/assets/jquery-1.11.3.min.js"></script>
+  <SocketStream/>
+
+  <link href="/assets/video-js/video-js.min.css" rel="stylesheet">
+  <link href="/assets/bootstrap-3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/bootstrap-switch/bootstrap-switch.min.css" rel="stylesheet">
+
+  <script src="/assets/video-js/video.min.js"></script>
+  <script src="/assets/bootstrap-switch/bootstrap-switch.min.js"></script>
+  <script src="/assets/bootstrap-3.3/js/bootstrap.min.js"></script>
+  <script> videojs.options.flash.swf = "/assets/video-js/video-js.swf" </script>
+  <script src="js/three.min.js"></script>
+  <script src="js/js/utils/GeometryUtils.js"></script>
+  <script src="js/js/shaders/ConvolutionShader.js"></script>
+  <script src="js/js/shaders/CopyShader.js"></script>
+  <script src="js/js/shaders/FilmShader.js"></script>
+  <script src="js/js/shaders/FXAAShader.js"></script>
+  <script src="js/js/postprocessing/EffectComposer.js"></script>
+  <script src="js/js/postprocessing/RenderPass.js"></script>
+  <script src="js/js/postprocessing/ShaderPass.js"></script>
+  <script src="js/js/postprocessing/MaskPass.js"></script>
+  <script src="js/js/postprocessing/BloomPass.js"></script>
+  <script src="js/js/postprocessing/FilmPass.js"></script>
+  <script src="js/js/Detector.js"></script>
+  <script src="js/js/libs/stats.min.js"></script>
+  <script src="js/js/geometries/TextGeometry.js"></script>
+  <script src="js/js/utils/FontUtils.js"></script>
+  <script src="js/fonts/gentilis_bold.typeface.js"></script>
+  <script src="js/fonts/gentilis_regular.typeface.js"></script>
+  <script src="js/fonts/optimer_bold.typeface.js"></script>
+  <script src="js/fonts/optimer_regular.typeface.js"></script>
+  <script src="js/fonts/helvetiker_bold.typeface.js"></script>
+  <script src="js/fonts/helvetiker_regular.typeface.js"></script>
+  <script src="js/fonts/droid/droid_sans_regular.typeface.js"></script>
+  <script src="js/fonts/droid/droid_sans_bold.typeface.js"></script>
+  <script src="js/fonts/droid/droid_serif_regular.typeface.js"></script>
+  <script src="js/fonts/droid/droid_serif_bold.typeface.js"></script>
+  <script src="js/js/controls/DeviceOrientationControls.js"></script>
+  <script src="js/js/controls/DeviceOrientationControls2.js"></script>
+  <script src="js/renderVideo.js"></script>
+  <title>U See Web</title>
+  <meta property="wb:webmaster" content="3ae1bf9c5fedfcdc" />
+</head>
+<body onload="initAll()">
+  <div class="container">
+    <div class="row">
+      <div style="width:100%" class="col-md-7" id='player'>
+        <video style="width:100%" id="video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="none" height="500px">
+          <!-- poster="http://video-js.zencoder.com/oceans-clip.png"  -->
+          <source src="rtmp://live.hkstv.hk.lxdns.com/live/hks" type="rtmp/flv"/>
+          <source src="http://gslb.tv.sohu.com/live?cid=3&type=hls" type="application/x-mpegURL"/>
+          <source src="video/test1.mp4" type="video/mp4"/>
+          <p class="vjs-no-js">请启用javascript, 最好升级您的浏览器以<a href="http://videojs.com/html5-video-support/" target="_blank">支持HTML5 video</a></p>
+        </video>
+        <script src="/assets/video-js/videojs-media-sources.js"></script>
+        <script src="/assets/video-js/videojs.hls.min.js"></script>
+      </div>
+      <button type="button" onClick="change3Dto2D()" style="width:200px;height:200px" >Single View</button>
+      <button type="button" onClick="change2Dto3D()" style="width:200px;height:200px" >Dual View </button>
+      <button type="button" onClick="stopRender()" style="width:200px;height:200px"  > Stop!</button>
+      <div class="col-md-5">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            Chat Room &nbsp;-&nbsp;<span id='userId'></span>&nbsp;<button class="btn btn-warn btn-sm" id="logout">Logout</button>
+          </div>
+          <div class="panel-body">
+            <ul class="chat" id='chat-room'></ul>
+          </div>
+          <div class="panel-footer">
+            <form id="chat-input" onsubmit="return false" style="display:none">
+              <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+            </form>
+            <div class="input-group" id='chat-foot'></div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="play-rtmp">HKS(RTMP格式)</button>
+        <button class="btn btn-warning btn-sm" id="play-safari">东方卫视HD(Safari专用)</button>
+        <button class="btn btn-info btn-sm" id="play-local"> 打开服务器文件 </button>
+        <button class="btn btn-primary btn-sm" id="play-local-live-rtmp"> 打开直播rtmp </button>
+        <button class="btn btn-warning btn-sm" id="play-local-live-http"> 打开直播m3u8 </button>
+        &nbsp;&nbsp;
+        &nbsp;&nbsp;
+        弹幕: <input type="checkbox" id="open-dammo">
+      </div>
+    </div>
+    <div id="divCanvas" style="display: block; background-color: transparent; position: absolute; left: 0px; top: 0px; z-index: 99999;">
+      <canvas id="canvasAll">
+      </canvas>
+    </div>
+  </body>
+  </html>

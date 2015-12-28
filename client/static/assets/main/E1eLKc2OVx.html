@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link href="/assets/main/E1eLKc2OVx.css" media="screen" rel="stylesheet" type="text/css"><script src="/assets/main/E1eLKc2OVx.js" type="text/javascript"></script><script type="text/javascript">(function(){var ht=Hogan.Template,t=require('socketstream').tmpl;t['chat-foot_login']=new ht(function(c,p,i){var _=this;_.b(i=i||"");_.b("Login with: ");_.b("\n" + i);_.b("<a href='/auth/twitter' class=\"btn btn-primary btn-sm\" id=\"login-twitter\">Twitter</a> &nbsp;");_.b("\n" + i);_.b("<button class=\"btn btn-primary btn-sm\" id=\"login-weibo\">Weibo</button>");_.b("\n");return _.fl();;});t['chat-foot_send']=new ht(function(c,p,i){var _=this;_.b(i=i||"");_.b("<input id=\"btn-input\" type=\"text\" class=\"form-control input-sm\" placeholder=\"Type your message here...\" />");_.b("\n" + i);_.b("<span class=\"input-group-btn\">");_.b("\n" + i);_.b("    <button class=\"btn btn-warning btn-sm\" id=\"btn-chat\">");_.b("\n" + i);_.b("        Send</button>");_.b("\n" + i);_.b("</span>");_.b("\n");return _.fl();;});t['chat-message']=new ht(function(c,p,i){var _=this;_.b(i=i||"");_.b("<p>");_.b("\n" + i);_.b("  <span class=\"time\">");_.b(_.v(_.f("time",c,p,0)));_.b("</span>");_.b("\n" + i);_.b("  <span class=\"message\">");_.b(_.v(_.f("message",c,p,0)));_.b("</span>");_.b("\n" + i);_.b("</p>");_.b("\n");return _.fl();;});t['chat-msg']=new ht(function(c,p,i){var _=this;_.b(i=i||"");_.b("<li class=\"");_.b(_.v(_.f("arrow",c,p,0)));_.b(" clearfix\"><span class=\"chat-img pull-");_.b(_.v(_.f("arrow",c,p,0)));_.b("\">");_.b("\n" + i);_.b("    <img src=\"http://placehold.it/50/55C1E7/fff&text=U\" alt=\"User Avatar\" class=\"img-circle\" />");_.b("\n" + i);_.b("</span>");_.b("\n" + i);_.b("    <div class=\"chat-body clearfix\">");_.b("\n" + i);_.b("        <div class=\"header\">");_.b("\n" + i);_.b("            <strong class=\"primary-font\">");_.b(_.v(_.f("userId",c,p,0)));_.b("</strong> <small class=\"pull-right text-muted\">");_.b("\n" + i);_.b("                ");_.b(_.v(_.f("time",c,p,0)));_.b("</small>");_.b("\n" + i);_.b("        </div>");_.b("\n" + i);_.b("        <p>");_.b("\n" + i);_.b("        ");_.b(_.v(_.f("msg",c,p,0)));_.b("\n" + i);_.b("        </p>");_.b("\n" + i);_.b("    </div>");_.b("\n" + i);_.b("</li>");_.b("\n");return _.fl();;});}).call(this);</script>
+    <title>Welcome</title>
+    <meta property="wb:webmaster" content="3ae1bf9c5fedfcdc" />
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+        <h1>U See Web!</h1>
+            <h3>Welcome: <span id='userId'></span></h3>
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Chat Room
+                </div>
+                <div class="panel-body">
+                    <ul class="chat" id='chat-room'></ul>
+                </div>
+                <div class="panel-footer">
+                <form id="demo" onsubmit="return false">
+                    <div class="input-group" id='chat-foot'></div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>require('events-responder')(0, {}, require('socketstream').send(0));
+require('socketstream-rpc')(1, {}, require('socketstream').send(1));
+require("/client/code/app/entry");</script></body>
+</html>

@@ -1,0 +1,172 @@
+'use strict';
+
+var path    = require('path'),
+    ss      = require( '../../../../lib/socketstream'),
+    options = ss.client.options,
+    defineAbcClient = require('../abcClient'),
+    fixtures = require('../../../fixtures');
+
+describe('bundler', function () {
+
+  //TODO set project root function
+
+  ss.root = ss.api.root = fixtures.project;
+
+  describe('API',function() {
+
+    beforeEach(function() {
+      ss.client.set({liveReload:false});
+    });
+    afterEach(function() {
+      ss.client.forget();
+    });
+
+    it('should resolve paths in default dirs',function() {
+      var paths = ss.api.bundler.sourcePaths({
+        css: 'main.css',
+        code: 'main.js',
+        tmpl: 'main.html'
+      });
+
+      paths.css.should.eql(['client/css/main.css']);
+      paths.code.should.eql(['client/code/main.js']);
+      paths.tmpl.should.eql(['client/templates/main.html']);
+    });
+
+    it('should return bundler given id', function() {
+      var client = ss.client.define('abc', { view: 'abc.html' });
+
+      var bundler = ss.api.bundler.get({ client: 'abc' });
+      bundler.should.be.type('object');
+      bundler.client.should.equal(client);
+    });
+
+    it('should look up bundler by id', function() {
+      var client = ss.client.define('abc', { view: 'abc.html' });
+      ss.api.bundler.load();
+
+      var bundler = ss.api.bundler.get({ ts: client.id });
+      bundler.should.be.type('object');
+      bundler.client.should.equal(client);
+    });
+
+    it('should throw odd bundler lookups', function() {
+      ss.client.define('abc', { view: 'abc.html' });
+
+      ss.api.bundler.load();
+
+      // jshint immed: false
+      (function() {
+        ss.api.bundler.get({ ts: 'abc' });
+      }).should.throw(Error);
+    });
+
+    it('should throw if defined twice', function() {
+      ss.client.define('abc', { view: 'abc.html' });
+
+      // jshint immed: false
+      (function() {
+        ss.client.define('abc', { view: 'abc.html' });
+      }).should.throw(Error);
+    });
+
+    it('should set client options piecemeal', function() {
+      ss.client.set({ 'a':'a'});
+      options.a.should.equal('a');
+      ss.client.set({ 'b':'b'});
+      options.b.should.equal('b');
+      ss.client.set({ 'b':'B'});
+      options.b.should.equal('B');
+    });
+
+    it('should provides systemModules');
+
+    it('should provide systemModule by name, wrapped or not');
+  });
+
+  describe('custom bundlers', function() {
+
+    it('should define client using custom bundler function');
+
+    it('should call load and unload bundler');
+
+  });
+
+
+  describe('entries', function() {
+
+    afterEach(function() {
+      ss.client.forget();
+    });
+
+    it('should identify css explicitly defined');
+
+    it('should identify css defined using /*');
+
+    it('should identify js explicitly defined');
+
+    it('should identify js defined using /*');
+
+    it('should identify single template defined', function() {
+      var client = defineAbcClient({
+        view: 'main2.html',
+        css: 'main.css',
+        code: 'main.js',
+        tmpl: 'main.html'
+      });
+
+      var templates = ss.api.bundler.entries(client,'tmpl');
+      templates.should.eql([{
+        file: 'client/templates/main.html', importedBy: 'client/templates/main.html', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html'
+      }]);
+
+
+    });
+
+    it('should identify multiple templates explicitly defined', function() {
+      var client = defineAbcClient({
+        view: 'main2.html',
+        css: 'main.css',
+        code: 'main.js',
+        tmpl: ['main.html','abc/1.html','abc/2.html']
+      });
+
+      var templates = ss.api.bundler.entries(client,'tmpl');
+      templates.should.eql([
+        { file: 'client/templates/main.html', importedBy: 'client/templates/main.html', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html' },
+        { file: 'client/templates/abc/1.html', importedBy: 'client/templates/abc/1.html', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html' },
+        { file: 'client/templates/abc/2.html', importedBy: 'client/templates/abc/2.html', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html' }
+      ]);
+    });
+
+    it('should identify templates using /*', function() {
+
+      var client = defineAbcClient({
+        view: 'main2.html',
+        css: 'main.css',
+        code: 'main.js',
+        tmpl: 'abc/*'
+      });
+
+      var templates = ss.api.bundler.entries(client,'tmpl');
+      templates.should.eql([
+        { file: 'client/templates/abc/1.html', importedBy: 'client/templates/abc', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html' },
+        { file: 'client/templates/abc/2.html', importedBy: 'client/templates/abc', includeType: 'html', ext:'html', bundle:'tmpl', assetType:'html' }
+      ]);
+    });
+
+  });
+
+  it('should identify CSS when mixed with JS', function() {
+      var client = defineAbcClient({
+        view: 'main2.html',
+        css: './abc',
+        code: './abc',
+        tmpl: './abc'
+      });
+
+      var templates = ss.api.bundler.entries(client,'tmpl');
+
+  });
+
+});
